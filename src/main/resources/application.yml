@@ -6,6 +6,10 @@ spring:
     active: ${env}
   application:
     name: randomMeme
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
 
 mybatis-plus:
   mapper-locations: classpath:mapping/*Mapper.xml
