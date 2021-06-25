@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 public class ContentDto implements Serializable {
 
     private static final long serialVersionUID = -1L;
@@ -53,6 +53,16 @@ public class ContentDto implements Serializable {
      * 推荐数
      */
     private Integer recommend;
+
+    /**
+     * 分类编号
+     */
+    private String classifyCode;
+
+    /**
+     * 内容类型(1:图片 2:GIF 3:视频)
+     */
+    private Integer type;
 
     /**
      * 状态(0:下架 1:上架)
