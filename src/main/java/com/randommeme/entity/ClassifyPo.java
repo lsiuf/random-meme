@@ -1,10 +1,9 @@
 package com.randommeme.entity;
 
-import java.io.Serializable;
-
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.randommeme.common.entity.BasePo;
 import lombok.*;
 
 /**
@@ -19,7 +18,7 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @TableName("t_classify")
-public class ClassifyPo {
+public class ClassifyPo extends BasePo<ClassifyPo> {
 
     @TableId(value = "id")
     private Long id;
@@ -33,4 +32,19 @@ public class ClassifyPo {
      */
     @TableField("classify_code")
     private String classifyCode;
+    /**
+     * 最小内容主键
+     */
+    @TableField("min_content_id")
+    private Long minContentId;
+    /**
+     * 最大内容主键
+     */
+    @TableField("max_content_id")
+    private Long maxContentId;
+    /**
+     * 分类内容数量
+     */
+    @TableField("content_total")
+    private Long contentTotal;
 }

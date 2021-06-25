@@ -35,6 +35,21 @@ public class ClassifyDto implements Serializable {
     private String classifyCode;
 
     /**
+     * 最小内容主键
+     */
+    private Long minContentId;
+
+    /**
+     * 最大内容主键
+     */
+    private Long maxContentId;
+
+    /**
+     * 分类内容数量
+     */
+    private Long contentTotal;
+
+    /**
      * 创建时间
      */
     private Date createTime;
