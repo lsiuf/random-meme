@@ -1,6 +1,7 @@
 package com.randommeme.service.impl;
 
 import com.randommeme.dao.IUserDao;
+import com.randommeme.dto.UserDto;
 import com.randommeme.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,4 +22,24 @@ public class UserServiceImpl extends ServiceImpl<IUserDao, UserPo> implements IU
 
     @Autowired
     private UserConvert userConvert;
+
+    @Override
+    public void register(String account, String password, String mobile, String smsCode) {
+
+    }
+
+    @Override
+    public void sendSmsCode(String mobile) {
+
+    }
+
+    @Override
+    public UserDto login(String account, String password) {
+        return null;
+    }
+
+    @Override
+    public void getById(String id) {
+
+    }
 }
