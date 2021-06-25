@@ -3,6 +3,7 @@ package com.randommeme.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.randommeme.common.entity.BasePo;
 import lombok.*;
 
 /**
@@ -17,7 +18,7 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @TableName("t_user")
-public class UserPo {
+public class UserPo extends BasePo<UserPo> {
 
     @TableId(value = "id")
     private Long id;

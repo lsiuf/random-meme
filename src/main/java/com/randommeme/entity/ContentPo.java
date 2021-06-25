@@ -3,6 +3,7 @@ package com.randommeme.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.randommeme.common.entity.BasePo;
 import lombok.*;
 
 /**
@@ -17,7 +18,7 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @TableName("t_content")
-public class ContentPo {
+public class ContentPo extends BasePo<ContentPo> {
 
     @TableId(value = "id")
     private Long id;
@@ -51,6 +52,16 @@ public class ContentPo {
      */
     @TableField("recommend")
     private Integer recommend;
+    /**
+     * 分类编号
+     */
+    @TableField("classify_code")
+    private String classifyCode;
+    /**
+     * 内容类型(1:图片 2:GIF 3:视频)
+     */
+    @TableField("type")
+    private Integer type;
     /**
      * 状态(0:下架 1:上架)
      */
