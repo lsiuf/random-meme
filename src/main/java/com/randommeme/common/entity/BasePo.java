@@ -8,7 +8,7 @@ import lombok.*;
 import java.util.Date;
 
 /**
- * 公共实体类
+ * 公共实体父类
  *
  * @author lsivt
  */
