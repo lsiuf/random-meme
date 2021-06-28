@@ -1,6 +1,7 @@
 package com.randommeme.service;
 
 import com.randommeme.dto.ContentDto;
+import com.randommeme.entity.ContentExtremeValuePo;
 import com.randommeme.entity.ContentPo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +23,23 @@ public interface IContentService extends IService<ContentPo> {
     ContentDto getContent(Long userId);
 
     /**
+     * 查询主键最值
+     * min(id)、max(id)
+     *
+     * @param classifyCode
+     * @return
+     */
+    ContentExtremeValuePo getMinAndMaxId(String classifyCode);
+
+    /**
      * 批量导入内容
      */
     void importContent(MultipartFile[] multipartFile);
+
+    /**
+     * 更新内容
+     *
+     * @param contentDto
+     */
+    void update(ContentDto contentDto);
 }

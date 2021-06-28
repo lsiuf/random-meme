@@ -69,6 +69,11 @@ public class ContentServiceImpl extends ServiceImpl<IContentDao, ContentPo> impl
     }
 
     @Override
+    public ContentExtremeValuePo getMinAndMaxId(String classifyCode) {
+        return this.getBaseMapper().getMinAndMaxId(classifyCode);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void importContent(MultipartFile[] multipartFiles) {
         List<ContentPo> poList = new ArrayList<>();
@@ -98,5 +103,22 @@ public class ContentServiceImpl extends ServiceImpl<IContentDao, ContentPo> impl
             IoUtil.close(inputStream);
             IoUtil.close(outputStream);
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void update(ContentDto contentDto) {
+        ContentPo po = getById(contentDto.getId());
+        if (po == null) {
+            return;
+        }
+        ContentPo updatePo = new ContentPo();
+        updatePo.setAuthor(contentDto.getAuthor());
+        updatePo.setClassifyCode(contentDto.getClassifyCode());
+        updatePo.setType(contentDto.getType());
+        updatePo.setStatus(contentDto.getStatus());
+        updateById(updatePo);
+
+        classifyService.updateMinAndMaxId(contentDto.getClassifyCode());
     }
 }

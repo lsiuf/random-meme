@@ -1,5 +1,6 @@
 package com.randommeme.convert;
 
+import com.github.pagehelper.PageInfo;
 import com.randommeme.dto.ClassifyDto;
 import com.randommeme.entity.ClassifyPo;
 import org.mapstruct.Mapper;
@@ -22,4 +23,6 @@ public interface ClassifyConvert {
     ClassifyPo dtoToPo(ClassifyDto classifyDto);
 
     List<ClassifyDto> listPoToDto(List<ClassifyPo> classifyPoList);
+
+    PageInfo<ClassifyDto> pagePoToDto(PageInfo<ClassifyPo> pagePo);
 }

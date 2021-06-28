@@ -4,7 +4,12 @@
 <!-- 内容表指定工作空间，要与接口名相同 -->
 <mapper namespace="com.randommeme.dao.IContentDao">
 
-    <select id="getMinAndMaxId" resultType="com.randommeme.entity.ContentExtremeValuePo">
+    <resultMap id="extremeValueResMap" type="com.randommeme.entity.ContentExtremeValuePo">
+        <result property="minId" column="min_id"/>
+        <result property="maxId" column="max_id"/>
+    </resultMap>
+
+    <select id="getMinAndMaxId" resultMap="extremeValueResMap">
         SELECT MIN(id) AS min_id, MAX(id) AS max_id FROM t_content
         <if test="classifyCode != null">
             WHERE classify_code = #{classifyCode}

@@ -42,9 +42,4 @@ public class ClassifyPo extends BasePo<ClassifyPo> {
      */
     @TableField("max_content_id")
     private Long maxContentId;
-    /**
-     * 分类内容数量
-     */
-    @TableField("content_total")
-    private Long contentTotal;
 }

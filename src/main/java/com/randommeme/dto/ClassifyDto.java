@@ -1,5 +1,6 @@
 package com.randommeme.dto;
 
+import com.randommeme.common.dto.BaseDto;
 import lombok.*;
 
 import java.util.Date;
@@ -16,7 +17,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ClassifyDto implements Serializable {
+public class ClassifyDto extends BaseDto implements Serializable {
 
     private static final long serialVersionUID = -1L;
     /**
@@ -43,11 +44,6 @@ public class ClassifyDto implements Serializable {
      * 最大内容主键
      */
     private Long maxContentId;
-
-    /**
-     * 分类内容数量
-     */
-    private Long contentTotal;
 
     /**
      * 创建时间
