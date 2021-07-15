@@ -21,16 +21,16 @@ public class TokenUtils {
      * @return
      */
     public static Long getUserIP(HttpServletRequest httpServletRequest) {
-        Long userIP = null;
         String clientIP = ServletUtil.getClientIP(httpServletRequest);
-        if (StrUtil.isNotBlank(clientIP)) {
-            if (Validator.isIpv4(clientIP)) {
-                userIP = NetUtil.ipv4ToLong(clientIP);
-            }
-            if (Validator.isIpv6(clientIP)) {
-                userIP = NetUtil.ipv6ToBitInteger(clientIP).longValue();
-            }
+        if (StrUtil.isBlank(clientIP)) {
+            return null;
         }
-        return userIP;
+        if (Validator.isIpv4(clientIP)) {
+            return NetUtil.ipv4ToLong(clientIP);
+        }
+        if (Validator.isIpv6(clientIP)) {
+            return NetUtil.ipv6ToBitInteger(clientIP).longValue();
+        }
+        return null;
     }
 }
