@@ -21,6 +21,7 @@ import com.randommeme.service.IContentService;
 import com.randommeme.dao.IContentDao;
 import com.randommeme.service.IRecommendService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +54,8 @@ public class ContentServiceImpl extends ServiceImpl<IContentDao, ContentPo> impl
     @Autowired
     @Lazy
     private IRecommendService recommendService;
+    @Value(value = "${content-pre-url}")
+    private String contentPreUrl;
 
     @Override
     public ContentOutDto getContent(Long userId) {
@@ -148,16 +151,15 @@ public class ContentServiceImpl extends ServiceImpl<IContentDao, ContentPo> impl
                     log.error("导入失败, 不支持类型[ {} ]", type);
                     continue;
                 }
-                String preUrl = "D:\\testfile\\";
                 String fileName = IdUtil.fastSimpleUUID() + "." + type;
-                outputStream = FileUtil.getOutputStream(preUrl + fileName);
+                outputStream = FileUtil.getOutputStream(contentPreUrl + fileName);
                 outputStream.write(multipartFile.getBytes());
                 IoUtil.close(inputStream);
                 IoUtil.close(outputStream);
 
                 ContentPo po = new ContentPo();
                 po.setContentCode(RandomUtil.randomStringUpper(5) + System.currentTimeMillis());
-                po.setPreUrl(preUrl);
+                po.setPreUrl(contentPreUrl);
                 po.setFileName(fileName);
                 po.setType(contentTypeEnum.getCode());
                 poList.add(po);

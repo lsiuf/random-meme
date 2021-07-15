@@ -1,3 +1,6 @@
+#导入内容路径前缀
+content-pre-url: "D:\\testfile\\"
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
