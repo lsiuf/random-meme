@@ -1,5 +1,7 @@
 package com.randommeme.controller.back;
 
+import com.github.pagehelper.PageInfo;
+import com.randommeme.dto.ClassifyDto;
 import com.randommeme.service.IClassifyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,4 +20,19 @@ public class ClassifyBackController {
 
     @Autowired
     private IClassifyService classifyService;
+
+    @PostMapping("/page")
+    public PageInfo<ClassifyDto> page(@RequestBody ClassifyDto param) {
+        return classifyService.page(param);
+    }
+
+    @PostMapping("/insert")
+    public void insert(@RequestBody ClassifyDto param) {
+        classifyService.insert(param);
+    }
+
+    @PostMapping("/update")
+    public void update(@RequestBody ClassifyDto param) {
+        classifyService.update(param);
+    }
 }

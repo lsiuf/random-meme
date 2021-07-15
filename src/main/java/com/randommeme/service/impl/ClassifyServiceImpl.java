@@ -64,11 +64,12 @@ public class ClassifyServiceImpl extends ServiceImpl<IClassifyDao, ClassifyPo> i
         if (po == null) {
             return;
         }
+        if (StrUtil.isBlank(classifyDto.getClassifyName())) {
+            return;
+        }
         ClassifyPo updatePo = new ClassifyPo();
         updatePo.setId(classifyDto.getId());
         updatePo.setClassifyName(classifyDto.getClassifyName());
-        updatePo.setMinContentId(classifyDto.getMinContentId());
-        updatePo.setMaxContentId(classifyDto.getMaxContentId());
         updateById(updatePo);
     }
 

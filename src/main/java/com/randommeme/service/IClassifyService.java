@@ -35,5 +35,10 @@ public interface IClassifyService extends IService<ClassifyPo> {
      */
     void update(ClassifyDto classifyDto);
 
+    /**
+     * 更新最值
+     *
+     * @param classifyCode
+     */
     void updateMinAndMaxId(String classifyCode);
 }
