@@ -4,6 +4,7 @@ import com.randommeme.entity.ContentExtremeValuePo;
 import com.randommeme.entity.ContentPo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 内容表  数据层访问接口
@@ -19,5 +20,5 @@ public interface IContentDao extends BaseMapper<ContentPo> {
      *
      * @return
      */
-    ContentExtremeValuePo getMinAndMaxId(String classifyCode);
+    ContentExtremeValuePo getMinAndMaxId(@Param("classifyCode") String classifyCode);
 }

@@ -1,11 +1,13 @@
 package com.randommeme.controller.api;
 
-import com.randommeme.dto.ContentDto;
+import com.randommeme.common.util.TokenUtils;
+import com.randommeme.dto.ContentOutDto;
 import com.randommeme.service.IContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 内容表  控制器
@@ -23,13 +25,7 @@ public class ContentApiController {
     private IContentService contentService;
 
     @GetMapping("/randomGet")
-    public ContentDto randomGet() {
-        //TODO userId
-        return contentService.getContent(0L);
-    }
-
-    @PostMapping("/import")
-    public void importContent(@RequestBody MultipartFile[] multipartFiles) {
-        contentService.importContent(multipartFiles);
+    public ContentOutDto randomGet(HttpServletRequest httpServletRequest) {
+        return contentService.getContent(TokenUtils.getUserIP(httpServletRequest));
     }
 }

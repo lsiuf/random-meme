@@ -4,6 +4,7 @@ import com.randommeme.service.IContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 内容表  控制器
@@ -18,4 +19,9 @@ public class ContentBackController {
 
     @Autowired
     private IContentService contentService;
+
+    @PostMapping("/import")
+    public void importContent(@RequestBody MultipartFile[] multipartFiles) {
+        contentService.importContent(multipartFiles);
+    }
 }

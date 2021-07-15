@@ -1,5 +1,6 @@
 package com.randommeme.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -20,7 +21,7 @@ import lombok.*;
 @TableName("t_content")
 public class ContentPo extends BasePo<ContentPo> {
 
-    @TableId(value = "id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     /**
      * 内容编号
@@ -28,10 +29,15 @@ public class ContentPo extends BasePo<ContentPo> {
     @TableField("content_code")
     private String contentCode;
     /**
-     * 内容地址
+     * 内容地址前缀
      */
-    @TableField("content_url")
-    private String contentUrl;
+    @TableField("pre_url")
+    private String preUrl;
+    /**
+     * 内容文件名称
+     */
+    @TableField("file_name")
+    private String fileName;
     /**
      * 来源作者
      */
@@ -42,16 +48,6 @@ public class ContentPo extends BasePo<ContentPo> {
      */
     @TableField("view")
     private Integer view;
-    /**
-     * 评论数
-     */
-    @TableField("comment")
-    private Integer comment;
-    /**
-     * 推荐数
-     */
-    @TableField("recommend")
-    private Integer recommend;
     /**
      * 分类编号
      */

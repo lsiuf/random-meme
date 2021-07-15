@@ -6,16 +6,22 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.randommeme.common.constant.CommonStatusEnum;
+import com.randommeme.common.constant.ContentTypeEnum;
 import com.randommeme.dto.ContentDto;
+import com.randommeme.dto.ContentOutDto;
 import com.randommeme.entity.ClassifyPo;
 import com.randommeme.entity.ContentExtremeValuePo;
+import com.randommeme.entity.RecommendPo;
 import com.randommeme.service.IClassifyService;
 import com.randommeme.service.IContentService;
 import com.randommeme.dao.IContentDao;
+import com.randommeme.service.IRecommendService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,28 +50,82 @@ public class ContentServiceImpl extends ServiceImpl<IContentDao, ContentPo> impl
     private ContentConvert contentConvert;
     @Autowired
     private IClassifyService classifyService;
+    @Autowired
+    @Lazy
+    private IRecommendService recommendService;
 
     @Override
-    public ContentDto getContent(Long userId) {
-        List<ClassifyPo> classifyPos = classifyService.list(Wrappers.lambdaQuery(ClassifyPo.class));
+    public ContentOutDto getContent(Long userId) {
         LambdaQueryWrapper<ContentPo> contentQuery = Wrappers.lambdaQuery(ContentPo.class);
+        Long randomId = null;
+
+        //随机一个分类对象，如果存在则根据分类中的最值随机一个内容ID
+        List<ClassifyPo> classifyPos = classifyService.list();
         if (CollectionUtil.isNotEmpty(classifyPos)) {
             ClassifyPo classifyPo = RandomUtil.randomEle(classifyPos);
-            log.info("getContent-info: random classify. name:{}; code:{}", classifyPo.getClassifyName(), classifyPo.getClassifyCode());
-            contentQuery.eq(ContentPo::getClassifyCode, classifyPo.getClassifyCode());
             if (classifyPo.getMinContentId() != null && classifyPo.getMaxContentId() != null) {
-                Long randomId = RandomUtil.randomLong(classifyPo.getMinContentId(), classifyPo.getMaxContentId()) + classifyPo.getMinContentId();
-                contentQuery.ge(ContentPo::getId, randomId);
-            }
-        } else {
-            ContentExtremeValuePo contentExtremeValuePo = getBaseMapper().getMinAndMaxId(null);
-            if (contentExtremeValuePo != null) {
-                Long randomId = RandomUtil.randomLong(contentExtremeValuePo.getMinId(), contentExtremeValuePo.getMaxId()) + contentExtremeValuePo.getMinId();
-                contentQuery.ge(ContentPo::getId, randomId);
+                contentQuery.eq(ContentPo::getClassifyCode, classifyPo.getClassifyCode());
+                randomId = getRandomId(classifyPo.getMinContentId(), classifyPo.getMaxContentId());
             }
         }
+
+        //当分类对象随机内容ID不存在，查询内容全表获得最值并随机一个内容ID
+        if (randomId == null) {
+            ContentExtremeValuePo contentExtremeValuePo = getBaseMapper().getMinAndMaxId(null);
+            if (contentExtremeValuePo != null) {
+                randomId = getRandomId(contentExtremeValuePo.getMinId(), contentExtremeValuePo.getMaxId());
+            }
+        }
+
+        //根据内容ID >= 随机ID查询
+        contentQuery.ge(randomId != null, ContentPo::getId, randomId);
         ContentPo contentPo = getOne(contentQuery, false);
-        return contentConvert.poToDto(contentPo);
+        ContentOutDto contentDto = contentConvert.poToOutDto(contentPo);
+        if (contentDto == null) {
+            return contentDto;
+        }
+        contentDto.setContentUrl(contentPo.getPreUrl() + contentPo.getFileName());
+        contentDto.setRecommend(0);
+        contentDto.setNotRecommend(0);
+
+        // 更新内容阅读数
+        update(Wrappers.lambdaUpdate(ContentPo.class)
+                .eq(ContentPo::getId, contentPo.getId())
+                .setSql("view = view + 1"));
+
+        // 设置推荐数据
+        List<RecommendPo> recommendPos = recommendService.list(Wrappers.lambdaQuery(RecommendPo.class)
+                .eq(RecommendPo::getContentId, contentDto.getId()));
+        if (CollectionUtil.isNotEmpty(recommendPos)) {
+            Integer recommend = 0;
+            Integer notrecommend = 0;
+            Integer userRecommendType = null;
+            for (RecommendPo recommendPo : recommendPos) {
+                if (CommonStatusEnum.USABLE.getCode().equals(recommendPo.getRecommend())) {
+                    recommend += 1;
+                }
+                if (CommonStatusEnum.DISABLED.getCode().equals(recommendPo.getRecommend())) {
+                    notrecommend += 1;
+                }
+                // 判断当前内容用户是否已经操作
+                if (userId.equals(recommendPo.getUserId())) {
+                    userRecommendType = recommendPo.getRecommend();
+                }
+            }
+            contentDto.setRecommend(recommend);
+            contentDto.setNotRecommend(notrecommend);
+            contentDto.setUserRecommendType(userRecommendType);
+        }
+
+        // 设置分类名称
+        if (StrUtil.isNotBlank(contentPo.getClassifyCode())) {
+            ClassifyPo classifyPo = classifyPos.stream().filter(classify -> classify.getClassifyCode().equals(contentPo.getClassifyCode())).findFirst().orElse(null);
+            if (classifyPo != null) {
+                contentDto.setClassifyName(classifyPo.getClassifyName());
+            }
+        }
+
+        return contentDto;
     }
 
     @Override
@@ -83,17 +143,23 @@ public class ContentServiceImpl extends ServiceImpl<IContentDao, ContentPo> impl
             for (MultipartFile multipartFile : multipartFiles) {
                 inputStream = multipartFile.getInputStream();
                 String type = FileTypeUtil.getType(inputStream);
-                //TODO
-                String fileName = "D:\\testfile\\" + IdUtil.fastSimpleUUID() + "." + type;
-                outputStream = FileUtil.getOutputStream(fileName);
+                ContentTypeEnum contentTypeEnum = ContentTypeEnum.getInstance(type);
+                if (contentTypeEnum == null) {
+                    log.error("导入失败, 不支持类型[ {} ]", type);
+                    continue;
+                }
+                String preUrl = "D:\\testfile\\";
+                String fileName = IdUtil.fastSimpleUUID() + "." + type;
+                outputStream = FileUtil.getOutputStream(preUrl + fileName);
                 outputStream.write(multipartFile.getBytes());
                 IoUtil.close(inputStream);
                 IoUtil.close(outputStream);
 
                 ContentPo po = new ContentPo();
-                po.setId(IdWorker.getId());
                 po.setContentCode(RandomUtil.randomStringUpper(5) + System.currentTimeMillis());
-                po.setContentUrl(fileName);
+                po.setPreUrl(preUrl);
+                po.setFileName(fileName);
+                po.setType(contentTypeEnum.getCode());
                 poList.add(po);
             }
             saveBatch(poList);
@@ -114,11 +180,24 @@ public class ContentServiceImpl extends ServiceImpl<IContentDao, ContentPo> impl
         }
         ContentPo updatePo = new ContentPo();
         updatePo.setAuthor(contentDto.getAuthor());
-        updatePo.setClassifyCode(contentDto.getClassifyCode());
         updatePo.setType(contentDto.getType());
         updatePo.setStatus(contentDto.getStatus());
+        updatePo.setClassifyCode(contentDto.getClassifyCode());
         updateById(updatePo);
 
-        classifyService.updateMinAndMaxId(contentDto.getClassifyCode());
+        if (StrUtil.isNotBlank(contentDto.getClassifyCode())) {
+            classifyService.updateMinAndMaxId(contentDto.getClassifyCode());
+        }
+    }
+
+    /**
+     * 根据最小值和最大值范围随机出一个数
+     *
+     * @param minId
+     * @param maxId
+     * @return
+     */
+    private Long getRandomId(Long minId, Long maxId) {
+        return RandomUtil.randomLong(minId, maxId + 1);
     }
 }

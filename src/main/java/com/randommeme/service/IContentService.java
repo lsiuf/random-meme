@@ -1,6 +1,7 @@
 package com.randommeme.service;
 
 import com.randommeme.dto.ContentDto;
+import com.randommeme.dto.ContentOutDto;
 import com.randommeme.entity.ContentExtremeValuePo;
 import com.randommeme.entity.ContentPo;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -20,7 +21,7 @@ public interface IContentService extends IService<ContentPo> {
      * @param userId
      * @return
      */
-    ContentDto getContent(Long userId);
+    ContentOutDto getContent(Long userId);
 
     /**
      * 查询主键最值

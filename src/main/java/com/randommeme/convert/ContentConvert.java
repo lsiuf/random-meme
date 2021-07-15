@@ -1,6 +1,7 @@
 package com.randommeme.convert;
 
 import com.randommeme.dto.ContentDto;
+import com.randommeme.dto.ContentOutDto;
 import com.randommeme.entity.ContentPo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Builder;
@@ -19,7 +20,5 @@ public interface ContentConvert {
 
     ContentDto poToDto(ContentPo contentPo);
 
-    ContentPo dtoToPo(ContentDto contentDto);
-
-    List<ContentDto> listPoToDto(List<ContentPo> contentPoList);
+    ContentOutDto poToOutDto(ContentPo contentPo);
 }

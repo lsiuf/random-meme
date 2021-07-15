@@ -2,7 +2,6 @@ package com.randommeme.dto;
 
 import lombok.*;
 
-import java.util.Date;
 import java.io.Serializable;
 
 /**
@@ -16,7 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class ContentDto implements Serializable {
+public class ContentOutDto implements Serializable {
 
     private static final long serialVersionUID = -1L;
     /**
@@ -30,14 +29,9 @@ public class ContentDto implements Serializable {
     private String contentCode;
 
     /**
-     * 内容地址前缀
+     * 内容地址
      */
-    private String preUrl;
-
-    /**
-     * 内容文件名称
-     */
-    private String fileName;
+    private String contentUrl;
 
     /**
      * 来源作者
@@ -50,38 +44,28 @@ public class ContentDto implements Serializable {
     private Integer view;
 
     /**
-     * 评论数
-     */
-    private Integer comment;
-
-    /**
      * 推荐数
      */
     private Integer recommend;
 
     /**
-     * 分类编号
+     * 不推荐数
      */
-    private String classifyCode;
+    private Integer notRecommend;
+
+    /**
+     * 用户推荐状态
+     * 0:不推荐 1:推荐 null:未操作
+     */
+    private Integer userRecommendType;
+
+    /**
+     * 分类名称
+     */
+    private String classifyName;
 
     /**
      * 内容类型(1:图片 2:GIF 3:视频)
      */
     private Integer type;
-
-    /**
-     * 状态(0:下架 1:上架)
-     */
-    private Integer status;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
-
 }

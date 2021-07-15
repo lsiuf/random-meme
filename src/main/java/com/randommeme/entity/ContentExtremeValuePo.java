@@ -1,6 +1,5 @@
 package com.randommeme.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.*;
 
 /**
@@ -19,12 +18,10 @@ public class ContentExtremeValuePo {
     /**
      * 最小主键
      */
-    @TableField("min_id")
     private Long minId;
 
     /**
      * 最大主键
      */
-    @TableField("max_id")
     private Long maxId;
 }
