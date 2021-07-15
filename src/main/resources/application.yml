@@ -12,5 +12,5 @@ spring:
       max-request-size: 100MB
 
 mybatis-plus:
-  mapper-locations: classpath:mapping/*Mapper.xml
+  mapper-locations: mapper/*.xml
   type-aliases-package: com.randommeme.entity
