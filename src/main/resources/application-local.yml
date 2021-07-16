@@ -1,5 +1,5 @@
-#导入内容路径前缀
-content-pre-url: "D:\\testfile\\"
+#内容保存路径
+content-url: "D:\\testfile\\"
 
 spring:
   datasource:
