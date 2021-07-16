@@ -20,7 +20,6 @@
         <hutool.version>5.7.2</hutool.version>
         <mybatis.plus.version>3.4.3</mybatis.plus.version>
         <mybatis.plus.generator.version>3.4.1</mybatis.plus.generator.version>
-        <druid.version>1.2.6</druid.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <lombok.version>1.18.20</lombok.version>
         <velocity.version>2.3</velocity.version>
@@ -83,11 +82,6 @@
             <version>${velocity.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-            <version>${druid.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
             <version>${pagehelper.version}</version>
@@ -96,6 +90,10 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
