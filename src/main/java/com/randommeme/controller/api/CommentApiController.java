@@ -18,9 +18,4 @@ public class CommentApiController {
 
     @Autowired
     private ICommentService commentService;
-
-    @GetMapping("/test")
-    public String test(){
-        return "hello spring boot";
-    }
 }

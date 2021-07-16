@@ -29,11 +29,6 @@ public class ContentPo extends BasePo<ContentPo> {
     @TableField("content_code")
     private String contentCode;
     /**
-     * 内容地址前缀
-     */
-    @TableField("pre_url")
-    private String preUrl;
-    /**
      * 内容文件名称
      */
     @TableField("file_name")

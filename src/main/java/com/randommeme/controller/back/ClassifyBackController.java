@@ -27,8 +27,8 @@ public class ClassifyBackController {
     }
 
     @PostMapping("/insert")
-    public void insert(@RequestBody ClassifyDto param) {
-        classifyService.insert(param);
+    public void insert(String classifyName) {
+        classifyService.insert(classifyName);
     }
 
     @PostMapping("/update")

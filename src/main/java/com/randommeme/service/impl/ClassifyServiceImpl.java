@@ -50,10 +50,13 @@ public class ClassifyServiceImpl extends ServiceImpl<IClassifyDao, ClassifyPo> i
     }
 
     @Override
-    public void insert(ClassifyDto classifyDto) {
+    public void insert(String classifyName) {
+        if (StrUtil.isBlank(classifyName)) {
+            return;
+        }
         ClassifyPo po = new ClassifyPo();
         po.setId(IdWorker.getId());
-        po.setClassifyName(classifyDto.getClassifyName());
+        po.setClassifyName(classifyName);
         po.setClassifyCode(RandomUtil.randomStringUpper(5));
         save(po);
     }

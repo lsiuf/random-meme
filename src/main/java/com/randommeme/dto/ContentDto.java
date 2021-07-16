@@ -30,11 +30,6 @@ public class ContentDto implements Serializable {
     private String contentCode;
 
     /**
-     * 内容地址前缀
-     */
-    private String preUrl;
-
-    /**
      * 内容文件名称
      */
     private String fileName;

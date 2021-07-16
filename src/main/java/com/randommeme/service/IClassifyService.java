@@ -24,9 +24,9 @@ public interface IClassifyService extends IService<ClassifyPo> {
     /**
      * 新增分类
      *
-     * @param classifyDto
+     * @param classifyName
      */
-    void insert(ClassifyDto classifyDto);
+    void insert(String classifyName);
 
     /**
      * 更新分类

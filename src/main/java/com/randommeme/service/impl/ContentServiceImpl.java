@@ -54,8 +54,8 @@ public class ContentServiceImpl extends ServiceImpl<IContentDao, ContentPo> impl
     @Autowired
     @Lazy
     private IRecommendService recommendService;
-    @Value(value = "${content-pre-url}")
-    private String contentPreUrl;
+    @Value(value = "${content-url}")
+    private String contentUrl;
 
     @Override
     public ContentOutDto getContent(Long userId) {
@@ -87,7 +87,7 @@ public class ContentServiceImpl extends ServiceImpl<IContentDao, ContentPo> impl
         if (contentDto == null) {
             return contentDto;
         }
-        contentDto.setContentUrl(contentPo.getPreUrl() + contentPo.getFileName());
+        contentDto.setContentUrl(contentPo.getFileName());
         contentDto.setRecommend(0);
         contentDto.setNotRecommend(0);
 
@@ -152,14 +152,13 @@ public class ContentServiceImpl extends ServiceImpl<IContentDao, ContentPo> impl
                     continue;
                 }
                 String fileName = IdUtil.fastSimpleUUID() + "." + type;
-                outputStream = FileUtil.getOutputStream(contentPreUrl + fileName);
+                outputStream = FileUtil.getOutputStream(contentUrl + fileName);
                 outputStream.write(multipartFile.getBytes());
                 IoUtil.close(inputStream);
                 IoUtil.close(outputStream);
 
                 ContentPo po = new ContentPo();
                 po.setContentCode(RandomUtil.randomStringUpper(5) + System.currentTimeMillis());
-                po.setPreUrl(contentPreUrl);
                 po.setFileName(fileName);
                 po.setType(contentTypeEnum.getCode());
                 poList.add(po);
