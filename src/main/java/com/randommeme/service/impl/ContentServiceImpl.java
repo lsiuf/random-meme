@@ -82,6 +82,7 @@ public class ContentServiceImpl extends ServiceImpl<IContentDao, ContentPo> impl
 
         //根据内容ID >= 随机ID查询
         contentQuery.ge(randomId != null, ContentPo::getId, randomId);
+        contentQuery.eq(ContentPo::getStatus, CommonStatusEnum.USABLE.getCode());
         ContentPo contentPo = getOne(contentQuery, false);
         ContentOutDto contentDto = contentConvert.poToOutDto(contentPo);
         if (contentDto == null) {
