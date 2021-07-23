@@ -1,5 +1,8 @@
 package com.randommeme.controller.back;
 
+import com.github.pagehelper.PageInfo;
+import com.randommeme.dto.ContentDto;
+import com.randommeme.dto.ContentOutDto;
 import com.randommeme.service.IContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,17 @@ public class ContentBackController {
 
     @Autowired
     private IContentService contentService;
+
+    @PostMapping("/page")
+    public PageInfo<ContentOutDto> page(@RequestBody ContentDto param) {
+        PageInfo<ContentOutDto> result = contentService.page(param);
+        return result;
+    }
+
+    @PostMapping("/update")
+    public void updateStatus(@RequestBody ContentDto param) {
+        contentService.update(param);
+    }
 
     @PostMapping("/import")
     public void importContent(@RequestBody MultipartFile[] multipartFiles) {

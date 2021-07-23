@@ -16,7 +16,7 @@ public class BaseDto implements Serializable {
     /**
      * 页码
      */
-    private Integer pageNum = 1;
+    private Integer pageNo = 1;
 
     /**
      * 每页数量

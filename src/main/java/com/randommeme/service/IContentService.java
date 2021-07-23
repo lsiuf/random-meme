@@ -1,10 +1,12 @@
 package com.randommeme.service;
 
+import com.github.pagehelper.PageInfo;
 import com.randommeme.dto.ContentDto;
 import com.randommeme.dto.ContentOutDto;
 import com.randommeme.entity.ContentExtremeValuePo;
 import com.randommeme.entity.ContentPo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -14,6 +16,14 @@ import org.springframework.web.multipart.MultipartFile;
  * @date 2021-06-23 10:41:53
  */
 public interface IContentService extends IService<ContentPo> {
+
+    /**
+     * 分页查询
+     *
+     * @param param
+     * @return
+     */
+    PageInfo<ContentOutDto> page(ContentDto param);
 
     /**
      * 获取一个内容

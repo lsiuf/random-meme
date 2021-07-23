@@ -29,9 +29,9 @@ public class ContentOutDto implements Serializable {
     private String contentCode;
 
     /**
-     * 内容地址
+     * 内容文件名称
      */
-    private String contentUrl;
+    private String fileName;
 
     /**
      * 来源作者
@@ -68,4 +68,9 @@ public class ContentOutDto implements Serializable {
      * 内容类型(1:图片 2:GIF 3:视频)
      */
     private Integer type;
+
+    /**
+     * 状态(0:下架 1:上架)
+     */
+    private Integer status;
 }

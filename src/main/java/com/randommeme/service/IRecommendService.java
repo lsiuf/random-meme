@@ -1,5 +1,6 @@
 package com.randommeme.service;
 
+import com.randommeme.entity.RecommendCountPo;
 import com.randommeme.entity.RecommendPo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -19,4 +20,12 @@ public interface IRecommendService extends IService<RecommendPo> {
      * @param recommend
      */
     void recommend(Long userId, Long contentId, Integer recommend);
+
+    /**
+     * 统计推荐数
+     *
+     * @param contentId
+     * @return
+     */
+    RecommendCountPo recommendCount(Long contentId);
 }

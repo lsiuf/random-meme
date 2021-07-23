@@ -4,4 +4,27 @@
 <!-- 推荐表指定工作空间，要与接口名相同 -->
 <mapper namespace="com.randommeme.dao.IRecommendDao">
 
+    <select id="recommendCount" resultType="com.randommeme.entity.RecommendCountPo">
+        SELECT
+            SUM(
+                CASE recommend
+                WHEN 0 THEN
+                    1
+                ELSE
+                    0
+                END
+            ) AS notRecommend,
+            SUM(
+                CASE recommend
+                WHEN 1 THEN
+                    1
+                ELSE
+                    0
+                END
+            ) AS recommend
+        FROM
+            t_recommend
+        WHERE
+            content_id = #{contentId}
+    </select>
 </mapper>

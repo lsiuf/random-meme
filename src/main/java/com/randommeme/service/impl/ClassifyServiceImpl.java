@@ -43,7 +43,7 @@ public class ClassifyServiceImpl extends ServiceImpl<IClassifyDao, ClassifyPo> i
                 .eq(classifyDto.getId() != null, ClassifyPo::getId, classifyDto.getId())
                 .eq(StrUtil.isNotBlank(classifyDto.getClassifyCode()), ClassifyPo::getClassifyCode, classifyDto.getClassifyCode())
                 .like(StrUtil.isNotBlank(classifyDto.getClassifyName()), ClassifyPo::getClassifyName, classifyDto.getClassifyName());
-        PageInfo<ClassifyPo> pagePo = PageHelper.startPage(classifyDto.getPageNum(), classifyDto.getPageSize()).doSelectPageInfo(() -> {
+        PageInfo<ClassifyPo> pagePo = PageHelper.startPage(classifyDto.getPageNo(), classifyDto.getPageSize()).doSelectPageInfo(() -> {
             list(query);
         });
         return classifyConvert.pagePoToDto(pagePo);

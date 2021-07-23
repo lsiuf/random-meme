@@ -9,13 +9,13 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.randommeme.common.constant.CommonStatusEnum;
 import com.randommeme.common.constant.ContentTypeEnum;
 import com.randommeme.dto.ContentDto;
 import com.randommeme.dto.ContentOutDto;
-import com.randommeme.entity.ClassifyPo;
-import com.randommeme.entity.ContentExtremeValuePo;
-import com.randommeme.entity.RecommendPo;
+import com.randommeme.entity.*;
 import com.randommeme.service.IClassifyService;
 import com.randommeme.service.IContentService;
 import com.randommeme.dao.IContentDao;
@@ -26,7 +26,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 
-import com.randommeme.entity.ContentPo;
 import com.randommeme.convert.ContentConvert;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,6 +55,30 @@ public class ContentServiceImpl extends ServiceImpl<IContentDao, ContentPo> impl
     private IRecommendService recommendService;
     @Value(value = "${content-url}")
     private String contentUrl;
+
+    @Override
+    public PageInfo<ContentOutDto> page(ContentDto param) {
+        LambdaQueryWrapper<ContentPo> query = Wrappers.lambdaQuery(ContentPo.class)
+                .like(StrUtil.isNotBlank(param.getContentCode()), ContentPo::getContentCode, param.getContentCode())
+                .like(StrUtil.isNotBlank(param.getClassifyCode()), ContentPo::getClassifyCode, param.getClassifyCode())
+                .eq(param.getType() != null, ContentPo::getType, param.getType())
+                .eq(param.getStatus() != null, ContentPo::getStatus, param.getStatus());
+        PageInfo<ContentPo> pagePo = PageHelper.startPage(param.getPageNo(), param.getPageSize()).doSelectPageInfo(() -> {
+            list(query);
+        });
+        PageInfo<ContentOutDto> pageDto = contentConvert.pagePoToOutDto(pagePo);
+        pageDto.getList().forEach(dto -> {
+            RecommendCountPo recommendCountPo = recommendService.recommendCount(dto.getId());
+            dto.setRecommend(recommendCountPo.getRecommend());
+            dto.setNotRecommend(recommendCountPo.getNotRecommend());
+            ClassifyPo classifyPo = classifyService.getOne(Wrappers.lambdaQuery(ClassifyPo.class)
+                    .eq(StrUtil.isNotBlank(dto.getContentCode()), ClassifyPo::getClassifyCode, dto.getContentCode()), false);
+            if (classifyPo != null) {
+                dto.setClassifyName(classifyPo.getClassifyName());
+            }
+        });
+        return pageDto;
+    }
 
     @Override
     public ContentOutDto getContent(Long userId) {
@@ -88,7 +111,6 @@ public class ContentServiceImpl extends ServiceImpl<IContentDao, ContentPo> impl
         if (contentDto == null) {
             return contentDto;
         }
-        contentDto.setContentUrl(contentPo.getFileName());
         contentDto.setRecommend(0);
         contentDto.setNotRecommend(0);
 
@@ -180,12 +202,13 @@ public class ContentServiceImpl extends ServiceImpl<IContentDao, ContentPo> impl
         if (po == null) {
             return;
         }
-        ContentPo updatePo = new ContentPo();
-        updatePo.setAuthor(contentDto.getAuthor());
-        updatePo.setType(contentDto.getType());
-        updatePo.setStatus(contentDto.getStatus());
-        updatePo.setClassifyCode(contentDto.getClassifyCode());
-        updateById(updatePo);
+
+        update(Wrappers.lambdaUpdate(ContentPo.class)
+                .eq(ContentPo::getId, contentDto.getId())
+                .set(StrUtil.isNotBlank(contentDto.getAuthor()), ContentPo::getAuthor, contentDto.getAuthor())
+                .set(StrUtil.isNotBlank(contentDto.getClassifyCode()), ContentPo::getClassifyCode, contentDto.getClassifyCode())
+                .set(contentDto.getType() != null, ContentPo::getType, contentDto.getType())
+                .set(contentDto.getStatus() != null, ContentPo::getStatus, contentDto.getStatus()));
 
         if (StrUtil.isNotBlank(contentDto.getClassifyCode())) {
             classifyService.updateMinAndMaxId(contentDto.getClassifyCode());

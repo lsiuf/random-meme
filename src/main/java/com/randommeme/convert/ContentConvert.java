@@ -1,5 +1,6 @@
 package com.randommeme.convert;
 
+import com.github.pagehelper.PageInfo;
 import com.randommeme.dto.ContentDto;
 import com.randommeme.dto.ContentOutDto;
 import com.randommeme.entity.ContentPo;
@@ -21,4 +22,6 @@ public interface ContentConvert {
     ContentDto poToDto(ContentPo contentPo);
 
     ContentOutDto poToOutDto(ContentPo contentPo);
+
+    PageInfo<ContentOutDto> pagePoToOutDto(PageInfo<ContentPo> pagePo);
 }

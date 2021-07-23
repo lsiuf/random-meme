@@ -1,5 +1,6 @@
 package com.randommeme.dto;
 
+import com.randommeme.common.dto.BaseDto;
 import lombok.*;
 
 import java.util.Date;
@@ -16,7 +17,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class ContentDto implements Serializable {
+public class ContentDto extends BaseDto implements Serializable {
 
     private static final long serialVersionUID = -1L;
     /**

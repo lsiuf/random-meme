@@ -3,6 +3,7 @@ package com.randommeme.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.randommeme.entity.ContentPo;
+import com.randommeme.entity.RecommendCountPo;
 import com.randommeme.service.IContentService;
 import com.randommeme.service.IRecommendService;
 import com.randommeme.dao.IRecommendDao;
@@ -53,5 +54,17 @@ public class RecommendServiceImpl extends ServiceImpl<IRecommendDao, RecommendPo
                     .recommend(recommend)
                     .build());
         }
+    }
+
+    @Override
+    public RecommendCountPo recommendCount(Long contentId) {
+        RecommendCountPo po = getBaseMapper().recommendCount(contentId);
+        if (po == null) {
+            return RecommendCountPo.builder()
+                    .recommend(0)
+                    .notRecommend(0)
+                    .build();
+        }
+        return po;
     }
 }
