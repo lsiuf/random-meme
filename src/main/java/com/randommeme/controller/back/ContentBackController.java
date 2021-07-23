@@ -30,7 +30,7 @@ public class ContentBackController {
     }
 
     @PostMapping("/update")
-    public void updateStatus(@RequestBody ContentDto param) {
+    public void update(@RequestBody ContentDto param) {
         contentService.update(param);
     }
 

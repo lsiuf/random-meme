@@ -60,6 +60,11 @@ public class ContentOutDto implements Serializable {
     private Integer userRecommendType;
 
     /**
+     * 分类编号
+     */
+    private String classifyCode;
+
+    /**
      * 分类名称
      */
     private String classifyName;
