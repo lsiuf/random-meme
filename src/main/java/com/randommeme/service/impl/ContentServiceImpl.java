@@ -72,7 +72,7 @@ public class ContentServiceImpl extends ServiceImpl<IContentDao, ContentPo> impl
             dto.setRecommend(recommendCountPo.getRecommend());
             dto.setNotRecommend(recommendCountPo.getNotRecommend());
             ClassifyPo classifyPo = classifyService.getOne(Wrappers.lambdaQuery(ClassifyPo.class)
-                    .eq(StrUtil.isNotBlank(dto.getContentCode()), ClassifyPo::getClassifyCode, dto.getContentCode()), false);
+                    .eq(StrUtil.isNotBlank(dto.getContentCode()), ClassifyPo::getClassifyCode, dto.getClassifyCode()), false);
             if (classifyPo != null) {
                 dto.setClassifyName(classifyPo.getClassifyName());
             }
@@ -102,6 +102,7 @@ public class ContentServiceImpl extends ServiceImpl<IContentDao, ContentPo> impl
                 randomId = getRandomId(contentExtremeValuePo.getMinId(), contentExtremeValuePo.getMaxId());
             }
         }
+
 
         //根据内容ID >= 随机ID查询
         contentQuery.ge(randomId != null, ContentPo::getId, randomId);
