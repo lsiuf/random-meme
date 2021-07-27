@@ -62,7 +62,9 @@ public class ContentServiceImpl extends ServiceImpl<IContentDao, ContentPo> impl
                 .like(StrUtil.isNotBlank(param.getContentCode()), ContentPo::getContentCode, param.getContentCode())
                 .like(StrUtil.isNotBlank(param.getClassifyCode()), ContentPo::getClassifyCode, param.getClassifyCode())
                 .eq(param.getType() != null, ContentPo::getType, param.getType())
-                .eq(param.getStatus() != null, ContentPo::getStatus, param.getStatus());
+                .eq(param.getStatus() != null, ContentPo::getStatus, param.getStatus())
+                .orderByAsc(ContentPo::getClassifyCode)
+                .orderByDesc(ContentPo::getClassifyCode);
         PageInfo<ContentPo> pagePo = PageHelper.startPage(param.getPageNo(), param.getPageSize()).doSelectPageInfo(() -> {
             list(query);
         });
@@ -214,6 +216,22 @@ public class ContentServiceImpl extends ServiceImpl<IContentDao, ContentPo> impl
         if (StrUtil.isNotBlank(contentDto.getClassifyCode())) {
             classifyService.updateMinAndMaxId(contentDto.getClassifyCode());
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void batchUpdateClassify(List<Long> ids, String classifyCode) {
+        update(Wrappers.lambdaUpdate(ContentPo.class)
+                .in(ContentPo::getId, ids)
+                .set(ContentPo::getClassifyCode, classifyCode));
+        classifyService.updateMinAndMaxId(classifyCode);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void remove(List<Long> ids) {
+        removeByIds(ids);
+        //TODO 删除文件
     }
 
     /**

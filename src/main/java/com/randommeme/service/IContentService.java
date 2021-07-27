@@ -6,8 +6,9 @@ import com.randommeme.dto.ContentOutDto;
 import com.randommeme.entity.ContentExtremeValuePo;
 import com.randommeme.entity.ContentPo;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * 内容表  业务层访问接口
@@ -53,4 +54,19 @@ public interface IContentService extends IService<ContentPo> {
      * @param contentDto
      */
     void update(ContentDto contentDto);
+
+    /**
+     * 批量更新分类
+     *
+     * @param ids
+     * @param classifyCode
+     */
+    void batchUpdateClassify(List<Long> ids, String classifyCode);
+
+    /**
+     * 删除内容
+     *
+     * @param ids
+     */
+    void remove(List<Long> ids);
 }

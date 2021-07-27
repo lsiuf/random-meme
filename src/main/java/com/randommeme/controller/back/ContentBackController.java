@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 /**
  * 内容表  控制器
  *
@@ -32,6 +34,12 @@ public class ContentBackController {
     @PostMapping("/update")
     public void update(@RequestBody ContentDto param) {
         contentService.update(param);
+    }
+
+    @PostMapping("/batchUpdateClassify")
+    public void batchUpdateClassify(@RequestBody List<Long> ids, @RequestParam("classifyCode") String classifyCode) {
+        contentService.batchUpdateClassify(ids, classifyCode);
+        return;
     }
 
     @PostMapping("/import")
