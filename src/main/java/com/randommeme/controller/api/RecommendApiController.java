@@ -1,18 +1,15 @@
 package com.randommeme.controller.api;
 
-import cn.hutool.core.lang.Validator;
-import cn.hutool.core.net.NetUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.servlet.ServletUtil;
 import com.randommeme.common.constant.CommonStatusEnum;
 import com.randommeme.common.util.TokenUtils;
+import com.randommeme.convert.RecommendConvert;
+import com.randommeme.dto.RecommendCountDto;
 import com.randommeme.service.IRecommendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigInteger;
 
 /**
  * 推荐表  控制器
@@ -28,6 +25,8 @@ public class RecommendApiController {
 
     @Autowired
     private IRecommendService recommendService;
+    @Autowired
+    private RecommendConvert recommendConvert;
 
     @GetMapping("/recommend")
     public void recommend(HttpServletRequest httpServletRequest,
@@ -41,5 +40,8 @@ public class RecommendApiController {
         recommendService.recommend(TokenUtils.getUserIP(httpServletRequest), contentId, CommonStatusEnum.DISABLED.getCode());
     }
 
-
+    @GetMapping("/recommendCount")
+    public RecommendCountDto recommendCount(@RequestParam("contentId") Long contentId) {
+        return recommendConvert.countPoToDto(recommendService.recommendCount(contentId));
+    }
 }

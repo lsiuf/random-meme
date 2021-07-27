@@ -1,6 +1,8 @@
 package com.randommeme.convert;
 
+import com.randommeme.dto.RecommendCountDto;
 import com.randommeme.dto.RecommendDto;
+import com.randommeme.entity.RecommendCountPo;
 import com.randommeme.entity.RecommendPo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Builder;
@@ -22,4 +24,6 @@ public interface RecommendConvert {
     RecommendPo dtoToPo(RecommendDto recommendDto);
 
     List<RecommendDto> listPoToDto(List<RecommendPo> recommendPoList);
+
+    RecommendCountDto countPoToDto(RecommendCountPo po);
 }
